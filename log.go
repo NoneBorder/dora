@@ -1,28 +1,40 @@
-package doraemon
+package dora
 
-import (
-	"encoding/json"
+import "github.com/astaxie/beego/logs"
 
-	"github.com/astaxie/beego/logs"
-)
-
-var Logger *logs.BeeLogger
+var Logger = logs.GetBeeLogger()
 
 func init() {
-	Logger = logs.NewLogger(0)
-	Logger.SetLogger("console", "")
-	Logger.EnableFuncCallDepth(true)
+	logs.EnableFuncCallDepth(true)
+	logs.SetLogFuncCallDepth(4)
 }
 
-func ResetLogger(buffer int64, provider string, params interface{}) (err error) {
-	Logger = logs.NewLogger(buffer)
+// SetLogger sets a new logger.
+func SetLogger(adaptername string, config string) error {
+	return logs.SetLogger(adaptername, config)
+}
 
-	paramsJ, err := json.Marshal(params)
-	if err != nil {
-		return
-	}
+// SetLevel sets the global log level used by the simple logger.
+func SetLevel(l int) {
+	logs.SetLevel(l)
+}
 
-	Logger.SetLogger(provider, string(paramsJ))
-	Logger.EnableFuncCallDepth(true)
-	return
+func Debug(format string, v ...interface{}) {
+	logs.Debug(format, v...)
+}
+
+func Info(format string, v ...interface{}) {
+	logs.Info(format, v...)
+}
+
+func Warn(format string, v ...interface{}) {
+	logs.Warn(format, v...)
+}
+
+func Error(format string, v ...interface{}) {
+	logs.Error(format, v...)
+}
+
+func Fatal(format string, v ...interface{}) {
+	logs.Critical(format, v...)
 }
