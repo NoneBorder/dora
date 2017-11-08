@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"math/rand"
 	"net"
 	"os"
 	"sort"
@@ -63,4 +64,15 @@ func InStringSlice(s []string, e string) (exist bool) {
 	}()
 	exist = s[sort.SearchStrings(s, e)] == e
 	return
+}
+
+func RandStr(l int) string {
+	str := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	bytes := []byte(str)
+	result := []byte{}
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	for i := 0; i < l; i++ {
+		result = append(result, bytes[r.Intn(len(bytes))])
+	}
+	return string(result)
 }
