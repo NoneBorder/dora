@@ -1,6 +1,10 @@
 package apiresp
 
-import "github.com/astaxie/beego"
+import (
+	"strconv"
+
+	"github.com/astaxie/beego"
+)
 
 type ApiResp struct {
 	Code int         `json:"code"`
@@ -51,8 +55,21 @@ func (self *ApiResp) IsSuccess() bool {
 	return self.Code == 200
 }
 
+// BeegoServeJSON 返回 json 内容
+// @deprecated
 func (self *ApiResp) BeegoServeJSON(c beego.Controller) {
 	c.Ctx.Output.SetStatus(self.Code)
 	c.Data["json"] = self
 	c.ServeJSON()
+	c.StopRun()
+}
+
+// ReturnJSON 返回 json 内容
+// httpCode 默认为200， 业务请求状态码在 response header 中的 "nb-req-status" 体现
+func (self *ApiResp) ReturnJSON(c beego.Controller, httpCode ...int) {
+	httpCode = append(httpCode, 200)
+	c.Ctx.Output.SetStatus(httpCode[0])
+	c.Ctx.Output.Header("nb-req-status", strconv.Itoa(self.Code))
+	c.ServeJSON()
+	c.StopRun()
 }
