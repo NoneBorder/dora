@@ -70,6 +70,7 @@ func (self *ApiResp) ReturnJSON(c beego.Controller, httpCode ...int) {
 	httpCode = append(httpCode, 200)
 	c.Ctx.Output.SetStatus(httpCode[0])
 	c.Ctx.Output.Header("nb-req-status", strconv.Itoa(self.Code))
+	c.Data["json"] = self
 	c.ServeJSON()
 	c.StopRun()
 }
