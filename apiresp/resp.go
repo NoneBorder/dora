@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/context"
 )
 
 const NbReqStatusHeader = "Nb-Req-Status"
@@ -75,4 +76,12 @@ func (self *ApiResp) ReturnJSON(c beego.Controller, httpCode ...int) {
 	c.Data["json"] = self
 	c.ServeJSON()
 	c.StopRun()
+}
+
+func (self *ApiResp) JSON(ctx context.Context, httpCode ...int) {
+	httpCode = append(httpCode, 200)
+	ctx.Output.SetStatus(httpCode[0])
+	ctx.Output.Header(NbReqStatusHeader, strconv.Itoa(self.Code))
+	ctx.Output.JSON(self, false, false)
+	panic(beego.ErrAbort)
 }
