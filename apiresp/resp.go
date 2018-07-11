@@ -78,7 +78,7 @@ func (self *ApiResp) ReturnJSON(c beego.Controller, httpCode ...int) {
 	c.StopRun()
 }
 
-func (self *ApiResp) JSON(ctx context.Context, httpCode ...int) {
+func (self *ApiResp) JSON(ctx *context.Context, httpCode ...int) {
 	httpCode = append(httpCode, 200)
 	ctx.Output.SetStatus(httpCode[0])
 	ctx.Output.Header(NbReqStatusHeader, strconv.Itoa(self.Code))
